@@ -341,7 +341,27 @@ window.ALEXA_MENU = {
             {
               "name": "Zapalovač",
               "volume": "",
-              "price": "20,-"
+              "price": "50,-"
+            }
+          ]
+        },
+        {
+          "title": "Penzion",
+          "items": [
+            {
+              "name": "Pronájem pokoje",
+              "volume": "1/2 hodina",
+              "price": "2300"
+            },
+            {
+              "name": "Pronájem pokoje",
+              "volume": "1 hodina",
+              "price": "2800"
+            },
+            {
+              "name": "Masáž",
+              "volume": "1 hodina",
+              "price": "3000"
             }
           ]
         }
