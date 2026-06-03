@@ -1,0 +1,490 @@
+:root {
+  --bg: #17141a;
+  --bg-strong: #0f0c10;
+  --surface: #fff;
+  --surface-soft: #f7f4ea;
+  --text: #201c24;
+  --muted: #6f6771;
+  --gold: #c49b2c;
+  --gold-soft: #f5e8ad;
+  --gold-deep: #a57d17;
+  --line: rgba(32, 28, 36, 0.14);
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.22);
+  --radius: 8px;
+  --shell: 1120px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  color: var(--text);
+  background: var(--bg);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: 0;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input {
+  font: inherit;
+  letter-spacing: 0;
+}
+
+.shell {
+  width: calc(100% - 32px);
+  max-width: var(--shell);
+  margin-inline: auto;
+}
+
+.site-header {
+  position: relative;
+  overflow: hidden;
+  min-height: 360px;
+  color: #fff;
+  background:
+    linear-gradient(90deg, rgba(15, 12, 16, 0.96), rgba(23, 20, 26, 0.9)),
+    url("./assets/pattern-dark.jpg") center / cover;
+}
+
+.header-ornament {
+  position: absolute;
+  inset: auto 0 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--gold-deep), var(--gold-soft), var(--gold-deep));
+}
+
+.header-layout {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(220px, 440px) 1fr;
+  gap: 48px;
+  align-items: center;
+  min-height: 360px;
+  padding-block: 44px 54px;
+}
+
+.brand {
+  display: block;
+}
+
+.brand img {
+  display: block;
+  width: min(100%, 420px);
+  height: auto;
+  filter: drop-shadow(0 18px 42px rgba(0, 0, 0, 0.42));
+}
+
+.header-copy {
+  justify-self: end;
+  max-width: 430px;
+  text-align: right;
+}
+
+.header-copy h1 {
+  margin: 0;
+  color: var(--gold-soft);
+  font-size: 3rem;
+  line-height: 1.04;
+  font-weight: 700;
+}
+
+.header-copy p {
+  margin: 18px 0 0;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 1.12rem;
+}
+
+.header-copy a {
+  color: #fff;
+  text-decoration-color: rgba(245, 232, 173, 0.7);
+  text-underline-offset: 4px;
+}
+
+.menu-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid rgba(245, 232, 173, 0.24);
+  background: rgba(15, 12, 16, 0.94);
+  color: #fff;
+  backdrop-filter: blur(18px);
+}
+
+.toolbar-layout {
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  gap: 20px;
+  align-items: center;
+  padding-block: 12px;
+}
+
+.toolbar-layout > * {
+  min-width: 0;
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  min-width: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: thin;
+}
+
+.tab {
+  flex: 0 0 auto;
+  min-height: 42px;
+  padding: 0 16px;
+  border: 1px solid rgba(245, 232, 173, 0.36);
+  border-radius: var(--radius);
+  color: rgba(255, 255, 255, 0.84);
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+}
+
+.tab[aria-pressed="true"] {
+  color: var(--text);
+  border-color: transparent;
+  background: linear-gradient(90deg, var(--gold-deep), var(--gold-soft));
+}
+
+.search {
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+  min-height: 42px;
+  padding: 0 12px;
+  border: 1px solid rgba(245, 232, 173, 0.36);
+  border-radius: var(--radius);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.search svg {
+  display: block;
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  color: rgba(255, 255, 255, 0.74);
+}
+
+.search input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  color: #fff;
+  background: transparent;
+}
+
+.search input::placeholder {
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.intro-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: center;
+  padding-block: 26px;
+  color: #fff;
+}
+
+.promo-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+  align-items: baseline;
+}
+
+.promo-line strong {
+  color: var(--gold-soft);
+  font-size: 1.18rem;
+}
+
+.promo-line span {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.call-button {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: var(--radius);
+  color: var(--text);
+  background: linear-gradient(90deg, var(--gold-deep), var(--gold-soft));
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.call-button svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.menu-stage {
+  padding-block: 28px 52px;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.97), rgba(255, 255, 255, 0.92)),
+    url("./assets/pattern-gold.jpg") left top / 480px auto;
+}
+
+.menu-root {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px 42px;
+}
+
+.menu-section {
+  min-width: 0;
+  padding-block: 10px 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+.menu-section h2 {
+  margin: 0 0 12px;
+  color: var(--gold-deep);
+  font-size: 1.55rem;
+  line-height: 1.18;
+  font-weight: 700;
+}
+
+.menu-list {
+  display: grid;
+  gap: 2px;
+}
+
+.menu-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 78px 104px;
+  gap: 14px;
+  align-items: baseline;
+  min-height: 38px;
+  padding-block: 6px;
+}
+
+.menu-row h3 {
+  min-width: 0;
+  margin: 0;
+  font-size: 1.08rem;
+  line-height: 1.25;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.volume {
+  color: var(--muted);
+  text-align: right;
+  font-size: 0.98rem;
+  white-space: nowrap;
+}
+
+.price {
+  color: var(--gold-deep);
+  font-size: 1.04rem;
+  font-weight: 700;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.price::before {
+  content: "★";
+  margin-right: 8px;
+  color: var(--gold-soft);
+  font-size: 0.74rem;
+  vertical-align: 0.1em;
+}
+
+.empty-state {
+  margin: 0;
+  padding: 44px 0;
+  color: var(--muted);
+  text-align: center;
+}
+
+.contact-band {
+  color: #fff;
+  background:
+    linear-gradient(90deg, rgba(15, 12, 16, 0.96), rgba(23, 20, 26, 0.9)),
+    url("./assets/pattern-dark.jpg") center bottom / cover;
+}
+
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 24px;
+  align-items: center;
+  padding-block: 42px;
+}
+
+.contact-band h2 {
+  margin: 0 0 8px;
+  color: var(--gold-soft);
+  font-size: 1.6rem;
+}
+
+address {
+  display: grid;
+  gap: 2px;
+  color: rgba(255, 255, 255, 0.78);
+  font-style: normal;
+}
+
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.contact-actions a {
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid rgba(245, 232, 173, 0.32);
+  border-radius: var(--radius);
+  color: #fff;
+  text-decoration: none;
+}
+
+@media (max-width: 860px) {
+  .header-layout {
+    grid-template-columns: 1fr;
+    gap: 22px;
+    min-height: 320px;
+  }
+
+  .header-copy {
+    justify-self: start;
+    text-align: left;
+  }
+
+  .header-copy h1 {
+    font-size: 2.35rem;
+  }
+
+  .toolbar-layout,
+  .intro-row,
+  .contact-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .search {
+    max-width: none;
+  }
+
+  .menu-root {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .contact-actions {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 560px) {
+  .shell {
+    width: calc(100% - 22px);
+    max-width: var(--shell);
+  }
+
+  .site-header {
+    min-height: 280px;
+  }
+
+  .header-layout {
+    min-height: 280px;
+    padding-block: 28px 36px;
+  }
+
+  .brand img {
+    width: min(100%, 320px);
+  }
+
+  .header-copy h1 {
+    font-size: 2rem;
+  }
+
+  .header-copy p {
+    font-size: 1rem;
+  }
+
+  .tab {
+    min-height: 40px;
+    padding-inline: 12px;
+  }
+
+  .intro-row {
+    padding-block: 20px;
+  }
+
+  .call-button {
+    width: 100%;
+  }
+
+  .menu-stage {
+    padding-block: 16px 34px;
+    background-size: 360px auto;
+  }
+
+  .menu-section h2 {
+    font-size: 1.34rem;
+  }
+
+  .menu-row {
+    grid-template-columns: 1fr;
+    gap: 2px;
+    min-height: 34px;
+  }
+
+  .menu-row h3 {
+    grid-column: 1;
+    font-size: 1rem;
+  }
+
+  .volume {
+    grid-column: 1;
+    grid-row: 2;
+    text-align: left;
+    font-size: 0.9rem;
+  }
+
+  .price {
+    grid-column: 1;
+    grid-row: 3;
+    justify-self: start;
+    font-size: 0.92rem;
+    text-align: left;
+  }
+
+  .price::before {
+    display: none;
+  }
+}

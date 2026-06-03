@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="cs">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Editor nápojového lístku | ALEXA</title>
+    <meta name="robots" content="noindex">
+    <meta name="theme-color" content="#17141a">
+    <link rel="icon" href="./assets/logo-alexa.png">
+    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./editor.css">
+    <script defer src="./menu-data.js"></script>
+    <script defer src="./editor.js"></script>
+  </head>
+  <body class="editor-page">
+    <header class="editor-header">
+      <div class="shell editor-header-layout">
+        <a class="editor-logo" href="./" aria-label="Zpět na nápojový lístek">
+          <img src="./assets/logo-alexa.png" alt="ALEXA Exclusive Night Club">
+        </a>
+        <div>
+          <h1>Editor lístku</h1>
+          <p>Úpravy se ukládají do prohlížeče. Pro nasazení stáhněte nový soubor <code>menu-data.js</code>.</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="editor-main">
+      <section class="shell editor-actions" aria-label="Akce editoru">
+        <div class="editor-status">
+          <strong id="save-state">Připraveno</strong>
+          <span id="item-count"></span>
+        </div>
+        <div class="editor-buttons">
+          <a class="ghost-button" href="./">Zobrazit lístek</a>
+          <button class="ghost-button" type="button" id="reset-work">Vrátit pracovní změny</button>
+          <button class="ghost-button" type="button" id="copy-data">Kopírovat soubor</button>
+          <button class="primary-button" type="button" id="download-data">Stáhnout menu-data.js</button>
+        </div>
+      </section>
+
+      <section class="shell editor-note" aria-label="Jak uložit změny">
+        <strong>Jak se změny nasadí:</strong>
+        <span>upravte položky, klikněte na <b>Stáhnout menu-data.js</b> a staženým souborem nahraďte původní soubor v GitHub repozitáři. GitHub Pages neumí zapisovat změny přímo z prohlížeče.</span>
+      </section>
+
+      <section class="shell editor-panel" aria-labelledby="global-heading">
+        <div class="section-heading">
+          <h2 id="global-heading">Základní údaje</h2>
+          <button class="ghost-button small" type="button" id="touch-date">Dnešní datum</button>
+        </div>
+        <div class="field-grid">
+          <label>
+            <span>Datum aktualizace</span>
+            <input type="date" id="updated-field">
+          </label>
+          <label>
+            <span>Měna</span>
+            <input type="text" id="currency-field" placeholder="Kč">
+          </label>
+          <label>
+            <span>Web</span>
+            <input type="text" id="web-field" placeholder="alexaclub.cz">
+          </label>
+        </div>
+      </section>
+
+      <section class="shell editor-panel" aria-labelledby="contact-heading">
+        <div class="section-heading">
+          <h2 id="contact-heading">Kontakt</h2>
+        </div>
+        <div class="field-grid">
+          <label>
+            <span>Adresa</span>
+            <textarea id="address-field" rows="3" placeholder="Každý řádek zvlášť"></textarea>
+          </label>
+          <label>
+            <span>Telefony</span>
+            <textarea id="phones-field" rows="3" placeholder="Každý telefon na samostatný řádek"></textarea>
+          </label>
+        </div>
+      </section>
+
+      <section class="shell editor-panel" aria-labelledby="menu-heading">
+        <div class="section-heading">
+          <h2 id="menu-heading">Položky</h2>
+          <button class="primary-button small" type="button" id="add-group">Přidat záložku</button>
+        </div>
+        <div id="groups-root" class="groups-root"></div>
+      </section>
+
+      <section class="shell editor-panel" aria-labelledby="export-heading">
+        <div class="section-heading">
+          <h2 id="export-heading">Výstup</h2>
+          <button class="ghost-button small" type="button" id="refresh-output">Obnovit náhled</button>
+        </div>
+        <textarea id="output-field" class="output-field" rows="12" spellcheck="false"></textarea>
+      </section>
+    </main>
+  </body>
+</html>
