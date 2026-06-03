@@ -248,7 +248,8 @@ window.ALEXA_MENU = {
             }
           ]
         }
-      ]
+      ],
+      "published": true
     },
     {
       "id": "nealko",
@@ -324,7 +325,8 @@ window.ALEXA_MENU = {
             }
           ]
         }
-      ]
+      ],
+      "published": true
     },
     {
       "id": "tabak",
@@ -344,7 +346,15 @@ window.ALEXA_MENU = {
               "price": "50,-"
             }
           ]
-        },
+        }
+      ],
+      "published": true
+    },
+    {
+      "id": "penzion",
+      "title": "Penzion",
+      "published": true,
+      "sections": [
         {
           "title": "Penzion",
           "items": [
