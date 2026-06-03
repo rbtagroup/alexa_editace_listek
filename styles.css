@@ -37,6 +37,17 @@ a {
   color: inherit;
 }
 
+.draft-notice {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  padding: 8px 14px;
+  color: var(--text);
+  background: linear-gradient(90deg, var(--gold-deep), var(--gold-soft));
+  font-weight: 700;
+  text-align: center;
+}
+
 button,
 input {
   font: inherit;
@@ -68,29 +79,32 @@ input {
 
 .header-layout {
   position: relative;
-  display: grid;
-  grid-template-columns: minmax(220px, 440px) 1fr;
-  gap: 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
   align-items: center;
+  justify-content: center;
   min-height: 360px;
-  padding-block: 44px 54px;
+  padding-block: 38px 50px;
+  text-align: center;
 }
 
 .brand {
   display: block;
+  width: 100%;
 }
 
 .brand img {
   display: block;
-  width: min(100%, 420px);
+  width: min(100%, 360px);
   height: auto;
+  margin-inline: auto;
   filter: drop-shadow(0 18px 42px rgba(0, 0, 0, 0.42));
 }
 
 .header-copy {
-  justify-self: end;
-  max-width: 430px;
-  text-align: right;
+  max-width: 560px;
+  text-align: center;
 }
 
 .header-copy h1 {
@@ -105,6 +119,7 @@ input {
   margin: 18px 0 0;
   color: rgba(255, 255, 255, 0.86);
   font-size: 1.12rem;
+  overflow-wrap: anywhere;
 }
 
 .header-copy a {
@@ -125,9 +140,10 @@ input {
 
 .toolbar-layout {
   display: grid;
-  grid-template-columns: 1fr 260px;
+  grid-template-columns: minmax(280px, 520px) minmax(220px, 320px);
   gap: 20px;
   align-items: center;
+  justify-content: space-between;
   padding-block: 12px;
 }
 
@@ -136,17 +152,17 @@ input {
 }
 
 .tabs {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
+  width: 100%;
   min-width: 0;
   max-width: 100%;
-  overflow-x: auto;
-  padding-bottom: 2px;
-  scrollbar-width: thin;
 }
 
 .tab {
-  flex: 0 0 auto;
+  width: 100%;
+  min-width: 0;
   min-height: 42px;
   padding: 0 16px;
   border: 1px solid rgba(245, 232, 173, 0.36);
@@ -154,6 +170,10 @@ input {
   color: rgba(255, 255, 255, 0.84);
   background: rgba(255, 255, 255, 0.04);
   cursor: pointer;
+  text-align: center;
+  white-space: normal;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tab[aria-pressed="true"] {
@@ -375,14 +395,12 @@ address {
 
 @media (max-width: 860px) {
   .header-layout {
-    grid-template-columns: 1fr;
     gap: 22px;
     min-height: 320px;
   }
 
   .header-copy {
-    justify-self: start;
-    text-align: left;
+    text-align: center;
   }
 
   .header-copy h1 {
@@ -411,7 +429,7 @@ address {
 
 @media (max-width: 560px) {
   .shell {
-    width: calc(100% - 22px);
+    width: min(calc(100% - 22px), 368px);
     max-width: var(--shell);
   }
 
@@ -438,7 +456,7 @@ address {
 
   .tab {
     min-height: 40px;
-    padding-inline: 12px;
+    padding-inline: 8px;
   }
 
   .intro-row {

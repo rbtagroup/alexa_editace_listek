@@ -16,9 +16,13 @@ V editoru lze:
 - přidávat a mazat položky,
 - přidávat a mazat sekce,
 - přidávat hlavní záložky,
-- upravit kontakt, měnu a datum aktualizace.
+- zapínat a vypínat zveřejnění hlavních záložek,
+- upravit kontakt, měnu a datum aktualizace,
+- kontrolovat změny v živém náhledu přímo na stránce editoru.
 
-Editor změny průběžně ukládá do prohlížeče. Po dokončení klikněte na `Stáhnout menu-data.js` a staženým souborem nahraďte původní `napojovy-listek/menu-data.js`.
+Editor změny průběžně ukládá do prohlížeče a dole zobrazuje pracovní náhled. Pokud se po otevření nezobrazí žádné položky, klikněte na `Načíst aktuální menu`; tím se zahodí špatná pracovní kopie v prohlížeči a znovu se načte `menu-data.js`. Po dokončení klikněte na `Stáhnout menu-data.js` a staženým souborem nahraďte původní `napojovy-listek/menu-data.js`.
+
+Pozor: běžný GitHub Pages web neumí přímo zapisovat změny z prohlížeče do repozitáře. Dokud stažený `menu-data.js` nenahrajete zpět na GitHub, veřejný QR lístek se nezmění. Pracovní náhled v editoru slouží jen ke kontrole před nasazením.
 
 Alternativně lze všechny názvy, objemy a ceny upravit ručně přímo v souboru `menu-data.js`.
 

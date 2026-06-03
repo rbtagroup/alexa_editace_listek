@@ -9,8 +9,6 @@
     <link rel="icon" href="./assets/logo-alexa.png">
     <link rel="stylesheet" href="./styles.css">
     <link rel="stylesheet" href="./editor.css">
-    <script defer src="./menu-data.js"></script>
-    <script defer src="./editor.js"></script>
   </head>
   <body class="editor-page">
     <header class="editor-header">
@@ -33,6 +31,9 @@
         </div>
         <div class="editor-buttons">
           <a class="ghost-button" href="./">Zobrazit lístek</a>
+          <a class="ghost-button" href="./?draft=1" target="_blank" rel="noopener">Pracovní náhled</a>
+          <button class="ghost-button" type="button" id="refresh-preview">Obnovit náhled</button>
+          <button class="ghost-button" type="button" id="load-current-menu">Načíst aktuální menu</button>
           <button class="ghost-button" type="button" id="reset-work">Vrátit pracovní změny</button>
           <button class="ghost-button" type="button" id="copy-data">Kopírovat soubor</button>
           <button class="primary-button" type="button" id="download-data">Stáhnout menu-data.js</button>
@@ -41,7 +42,7 @@
 
       <section class="shell editor-note" aria-label="Jak uložit změny">
         <strong>Jak se změny nasadí:</strong>
-        <span>upravte položky, klikněte na <b>Stáhnout menu-data.js</b> a staženým souborem nahraďte původní soubor v GitHub repozitáři. GitHub Pages neumí zapisovat změny přímo z prohlížeče.</span>
+        <span>upravujte formulářová pole v části <b>Položky</b>. Pokud položky nevidíte, klikněte na <b>Načíst aktuální menu</b>. Náhled lístku je jen kontrola, nejde editovat kliknutím. Pro nasazení klikněte na <b>Stáhnout menu-data.js</b> a staženým souborem nahraďte původní soubor v GitHub repozitáři.</span>
       </section>
 
       <section class="shell editor-panel" aria-labelledby="global-heading">
@@ -60,7 +61,7 @@
           </label>
           <label>
             <span>Web</span>
-            <input type="text" id="web-field" placeholder="alexaclub.cz">
+            <input type="text" id="web-field" placeholder="clubalexa.cz">
           </label>
         </div>
       </section>
@@ -89,6 +90,14 @@
         <div id="groups-root" class="groups-root"></div>
       </section>
 
+      <section class="shell editor-panel preview-panel" aria-labelledby="preview-heading">
+        <div class="section-heading">
+          <h2 id="preview-heading">Živý náhled</h2>
+          <span class="preview-hint">Náhled je pouze kontrolní. Úpravy dělejte ve formulářových polích výše.</span>
+        </div>
+        <iframe id="live-preview" title="Pracovní náhled nápojového lístku" src="./?draft=1"></iframe>
+      </section>
+
       <section class="shell editor-panel" aria-labelledby="export-heading">
         <div class="section-heading">
           <h2 id="export-heading">Výstup</h2>
@@ -97,5 +106,7 @@
         <textarea id="output-field" class="output-field" rows="12" spellcheck="false"></textarea>
       </section>
     </main>
+    <script src="./menu-data.js"></script>
+    <script src="./editor.js"></script>
   </body>
 </html>

@@ -1,12 +1,13 @@
 (function () {
   const STORAGE_KEY = "alexa-menu-editor-draft";
-  const sourceData = window.ALEXA_MENU || {
+  const fallbackSourceData = {
     updated: new Date().toISOString().slice(0, 10),
     currency: "Kč",
     contact: { address: [], phones: [], web: "" },
     groups: []
   };
-  let menu = loadDraft();
+  let sourceData = fallbackSourceData;
+  let menu = fallbackSourceData;
 
   const root = document.querySelector("#groups-root");
   const output = document.querySelector("#output-field");
@@ -17,6 +18,8 @@
   const webField = document.querySelector("#web-field");
   const addressField = document.querySelector("#address-field");
   const phonesField = document.querySelector("#phones-field");
+  const previewFrame = document.querySelector("#live-preview");
+  let previewTimer = 0;
 
   const today = () => new Date().toISOString().slice(0, 10);
   const clone = (value) => JSON.parse(JSON.stringify(value));
@@ -30,6 +33,33 @@
       .replace(/^-|-$/g, "");
     return base || `sekce-${Date.now()}`;
   };
+
+  function getSourceData() {
+    return window.ALEXA_MENU && typeof window.ALEXA_MENU === "object" ? window.ALEXA_MENU : fallbackSourceData;
+  }
+
+  function isMenuObject(value) {
+    return Boolean(value && typeof value === "object" && !Array.isArray(value));
+  }
+
+  function isUsableMenu(value) {
+    return isMenuObject(value) && Array.isArray(value.groups) && value.groups.length > 0;
+  }
+
+  function withMissingSourceGroups(value) {
+    const draft = clone(value);
+    draft.groups = Array.isArray(draft.groups) ? draft.groups : [];
+    const draftIds = new Set(draft.groups.map((group) => group.id).filter(Boolean));
+    const sourceGroups = Array.isArray(sourceData.groups) ? sourceData.groups : [];
+
+    sourceGroups.forEach((sourceGroup) => {
+      if (!sourceGroup.id || draftIds.has(sourceGroup.id)) return;
+      draft.groups.push(clone(sourceGroup));
+      draftIds.add(sourceGroup.id);
+    });
+
+    return draft;
+  }
 
   function readDraft() {
     try {
@@ -57,11 +87,19 @@
   }
 
   function loadDraft() {
+    const currentMenu = clone(sourceData);
+
     try {
       const stored = readDraft();
-      return stored ? JSON.parse(stored) : clone(sourceData);
+      if (!stored) return currentMenu;
+
+      const parsed = JSON.parse(stored);
+      if (!isMenuObject(parsed)) return currentMenu;
+      if (!isUsableMenu(parsed) && isUsableMenu(currentMenu)) return currentMenu;
+
+      return withMissingSourceGroups(parsed);
     } catch (error) {
-      return clone(sourceData);
+      return currentMenu;
     }
   }
 
@@ -76,6 +114,7 @@
     menu.groups.forEach((group, groupIndex) => {
       group.id = group.id || slugify(group.title || `zalozka-${groupIndex + 1}`);
       group.title = group.title || "Nová záložka";
+      group.published = group.published !== false;
       group.sections = Array.isArray(group.sections) ? group.sections : [];
       group.sections.forEach((section) => {
         section.title = section.title || "Nová sekce";
@@ -95,15 +134,30 @@
     output.value = serializeMenu();
     updateCounters();
     saveState.textContent = message || (stored ? "Uloženo v prohlížeči" : "Pracovní uložení není dostupné");
+    schedulePreviewRefresh();
+  }
+
+  function refreshPreview() {
+    if (!previewFrame) return;
+    const url = new URL(previewFrame.getAttribute("src"), window.location.href);
+    url.searchParams.set("draft", "1");
+    url.searchParams.set("preview", String(Date.now()));
+    previewFrame.src = url.href;
+  }
+
+  function schedulePreviewRefresh() {
+    window.clearTimeout(previewTimer);
+    previewTimer = window.setTimeout(refreshPreview, 450);
   }
 
   function updateCounters() {
+    const published = menu.groups.filter((group) => group.published !== false).length;
     const sections = menu.groups.reduce((sum, group) => sum + group.sections.length, 0);
     const items = menu.groups.reduce(
       (sum, group) => sum + group.sections.reduce((sectionSum, section) => sectionSum + section.items.length, 0),
       0
     );
-    itemCount.textContent = `${menu.groups.length} záložky, ${sections} sekcí, ${items} položek`;
+    itemCount.textContent = `${menu.groups.length} záložky, ${sections} sekcí, ${items} položek, ${published} zveřejněné`;
   }
 
   function bindInput(input, getter, setter) {
@@ -143,6 +197,31 @@
       persist();
     });
     wrapper.append(text, input);
+    return wrapper;
+  }
+
+  function makePublishToggle(group) {
+    const wrapper = document.createElement("label");
+    wrapper.className = "publish-toggle";
+
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.checked = group.published !== false;
+
+    const text = document.createElement("span");
+    text.textContent = "Zveřejnit";
+
+    const state = document.createElement("em");
+    state.textContent = input.checked ? "zapnuto" : "vypnuto";
+
+    input.addEventListener("change", () => {
+      group.published = input.checked;
+      state.textContent = input.checked ? "zapnuto" : "vypnuto";
+      persist(input.checked ? "Záložka zveřejněna" : "Záložka skryta");
+      render();
+    });
+
+    wrapper.append(input, text, state);
     return wrapper;
   }
 
@@ -221,6 +300,8 @@
   function renderGroup(group, groupIndex) {
     const card = document.createElement("article");
     card.className = "group-card";
+    card.dataset.group = group.id;
+    if (group.published === false) card.classList.add("is-unpublished");
 
     const head = document.createElement("div");
     head.className = "group-head";
@@ -231,7 +312,8 @@
       }),
       makeField("ID v URL / datech", group.id, (value) => {
         group.id = slugify(value);
-      })
+      }),
+      makePublishToggle(group)
     );
 
     const actions = document.createElement("div");
@@ -320,10 +402,19 @@
     saveState.textContent = "Soubor stažen";
   }
 
+  function loadSourceIntoEditor(message) {
+    clearDraft();
+    sourceData = getSourceData();
+    menu = clone(sourceData);
+    render();
+    persist(message || "Aktuální menu načteno");
+  }
+
   document.querySelector("#add-group").addEventListener("click", () => {
     menu.groups.push({
       id: `zalozka-${menu.groups.length + 1}`,
       title: "Nová záložka",
+      published: true,
       sections: [{ title: "Nová sekce", items: [] }]
     });
     render();
@@ -338,21 +429,37 @@
 
   document.querySelector("#reset-work").addEventListener("click", () => {
     if (!window.confirm("Vrátit pracovní změny a načíst původní menu-data.js?")) return;
-    clearDraft();
-    menu = clone(sourceData);
-    render();
-    persist("Pracovní změny vráceny");
+    loadSourceIntoEditor("Pracovní změny vráceny");
+  });
+
+  document.querySelector("#load-current-menu").addEventListener("click", () => {
+    if (!window.confirm("Načíst aktuální menu-data.js a přepsat pracovní změny v editoru?")) return;
+    loadSourceIntoEditor("Aktuální menu načteno");
   });
 
   document.querySelector("#copy-data").addEventListener("click", copyOutput);
   document.querySelector("#download-data").addEventListener("click", downloadOutput);
+  document.querySelector("#refresh-preview").addEventListener("click", () => {
+    refreshPreview();
+    saveState.textContent = "Náhled obnoven";
+  });
   document.querySelector("#refresh-output").addEventListener("click", () => {
     output.value = serializeMenu();
     saveState.textContent = "Náhled obnoven";
   });
 
-  normalizeMenu();
-  syncGlobalFields();
-  render();
-  persist("Připraveno");
+  function initEditor() {
+    sourceData = getSourceData();
+    menu = loadDraft();
+    normalizeMenu();
+    syncGlobalFields();
+    render();
+    persist(isUsableMenu(menu) ? "Připraveno" : "Data se nenačetla");
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initEditor, { once: true });
+  } else {
+    initEditor();
+  }
 })();

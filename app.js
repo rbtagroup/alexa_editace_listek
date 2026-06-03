@@ -1,13 +1,41 @@
 (function () {
-  const data = window.ALEXA_MENU;
+  const STORAGE_KEY = "alexa-menu-editor-draft";
+  const draftMode = new URLSearchParams(window.location.search).get("draft") === "1";
+  const data = loadMenuData();
+  data.groups = Array.isArray(data.groups) ? data.groups.filter((group) => group.published !== false) : [];
   const root = document.querySelector("#menu-root");
   const tabs = document.querySelector("#group-tabs");
   const search = document.querySelector("#menu-search");
   const emptyState = document.querySelector("#empty-state");
   const address = document.querySelector("#contact-address");
 
-  let activeGroup = data.groups[0].id;
+  let activeGroup = data.groups[0] ? data.groups[0].id : "";
   let query = "";
+
+  function loadMenuData() {
+    const fallback = {
+      currency: "Kč",
+      contact: { address: [] },
+      groups: []
+    };
+
+    if (!draftMode) return window.ALEXA_MENU || fallback;
+
+    try {
+      const draft = window.localStorage.getItem(STORAGE_KEY);
+      return draft ? JSON.parse(draft) : (window.ALEXA_MENU || fallback);
+    } catch (error) {
+      return window.ALEXA_MENU || fallback;
+    }
+  }
+
+  function showDraftNotice() {
+    if (!draftMode) return;
+    const notice = document.createElement("div");
+    notice.className = "draft-notice";
+    notice.textContent = "Pracovní náhled z editoru";
+    document.body.prepend(notice);
+  }
 
   const normalize = (value) =>
     value
@@ -25,7 +53,7 @@
     button.type = "button";
     button.className = "tab";
     button.dataset.group = group.id;
-    button.textContent = group.title;
+    button.textContent = group.shortTitle || group.title;
     button.setAttribute("aria-pressed", group.id === activeGroup ? "true" : "false");
     button.addEventListener("click", () => {
       activeGroup = group.id;
@@ -86,6 +114,11 @@
 
   function render() {
     const group = data.groups.find((item) => item.id === activeGroup) || data.groups[0];
+    if (!group) {
+      root.replaceChildren();
+      emptyState.hidden = false;
+      return;
+    }
     const normalizedQuery = normalize(query.trim());
     const sections = group.sections
       .map((section) => ({
@@ -100,8 +133,9 @@
   }
 
   function renderContact() {
+    const contact = data.contact || { address: [] };
     address.replaceChildren(
-      ...data.contact.address.map((line) => {
+      ...(contact.address || []).map((line) => {
         const span = document.createElement("span");
         span.textContent = line;
         return span;
@@ -114,6 +148,7 @@
     render();
   });
 
+  showDraftNotice();
   renderContact();
   render();
 })();
